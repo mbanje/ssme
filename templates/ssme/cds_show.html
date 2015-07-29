@@ -1,0 +1,16 @@
+{% extends "ssme/layout.html" %}
+{% load render_table from django_tables2 %}
+
+{% block links %}
+<link rel="stylesheet" href="/static/css/screen.css">
+{% endblock %}
+
+
+{% block content %}
+
+<div style="width:30% ; height:200px ; margin-left:30%">
+<h2>Liste des CDS<h2>
+{% render_table all_cds %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% load render_table from django_tables2 %}
+
+
+<div class="form" style="width:30% ; height:200px ; background:green; margin-left:30%"> 
+<br>
+<br>
+<form action="{% url "ssme_activities.views.export_reports" %}" method="post">
+{%csrf_token %}
+{{ form.as_table }}
+<input type="submit" value="Export" />
+</form>
+
+</div>
+

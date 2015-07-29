@@ -1,0 +1,35 @@
+{% extends "ssme/layout.html" %}
+{% load render_table from django_tables2 %}
+
+{% block links %}
+<link rel="stylesheet" href="/static/css/screen.css">
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="form" style="width:30% ; height:200px ; background:green; margin-left:30%"> 
+LIER UN REPORTEUR A UN CENTRE DE SANTE
+<br>
+<br>
+<form action="{% url "ssme_activities.views.reporters_cdd" %}" method="post">
+{%csrf_token %}
+{{ form.as_table }}
+<input type="submit" value="Submit" />
+</form>
+
+</div>
+
+
+<div style="width:30% ; height:200px ; margin-left:30%">
+<h2>Liste des rapporteurs<h2>
+{% render_table reporters %}
+</div>
+
+{% endblock %}
+
+
+
+
+

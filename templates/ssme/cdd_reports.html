@@ -1,0 +1,11 @@
+<div class="form" style="width:30% ; height:200px ; background:green; margin-left:30%"> 
+
+<br>
+<br>
+<form action="{% url "ssme_activities.views.cdd_reports" %}" method="post">
+{%csrf_token %}
+{{ form.as_table }}
+<input type="submit" value="Submit" />
+</form>
+
+</div>
