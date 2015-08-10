@@ -6,6 +6,7 @@ import requests
 import json
 from ssme_activities.models import PhoneNumber, Reporter, NiveauAvancement, CentreDeDistribution, Report, StockDebutJournee
 
+@json_view
 def send_sms_via_rapidpro(args):
 	'''This function is used to send an sms via RapidPro'''
 	'''phone_number = "tel:"+args['phone']
@@ -20,8 +21,11 @@ def send_sms_via_rapidpro(args):
 	token = getattr(settings,'token')
 	response = requests.post(message_url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data_to_send))
 	print(args['response'])'''
+	
+
 	print("b1")
-	phone_number = "tel:"+args['phone']
+
+	'''phone_number = "tel:"+args['phone']
 	sms_to_send = args['response']
 	data_to_send = {
   					"urns": [phone_number],
@@ -33,10 +37,12 @@ def send_sms_via_rapidpro(args):
 	print("b2")
 	token = getattr(settings,'token','')
 	print("b3")
-	response = requests.post(message_url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data_to_send))
+	#response = requests.post(message_url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data_to_send))
 	print("b4")
 	print(args['response'])
-	print(response)
+	print(response)'''
+
+	return {'ok' : args['valide'], 'response' : args['response']}
 
 def return_to_rapidPro(args):
 	pass
@@ -286,7 +292,7 @@ def receive_report(request):
 			for n in niveaux:
 				n.delete()
 		incoming_data['valide'] = True
-		send_sms_via_rapidpro(incoming_data)
+		#send_sms_via_rapidpro(incoming_data)
 		incoming_data['response'] = "Vous avez ressie a annuler la session."
 		send_sms_via_rapidpro(incoming_data)
 		resp = 0
