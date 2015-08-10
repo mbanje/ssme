@@ -5,6 +5,8 @@ from checkers import StockDebutJourneeControler, StockRecuLeMatinControler, Stoc
 import requests
 import json
 from ssme_activities.models import PhoneNumber, Reporter, NiveauAvancement, CentreDeDistribution, Report, StockDebutJournee
+from jsonview.decorators import json_view
+
 
 @json_view
 def send_sms_via_rapidpro(args):
