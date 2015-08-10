@@ -8,17 +8,35 @@ from ssme_activities.models import PhoneNumber, Reporter, NiveauAvancement, Cent
 
 def send_sms_via_rapidpro(args):
 	'''This function is used to send an sms via RapidPro'''
-	phone_number = "tel:"+args['phone']
+	'''phone_number = "tel:"+args['phone']
 	sms_to_send = args['response']
 	data_to_send = {
   					"urn": [phone_number],
   					"text": sms_to_send,
   					"relayer": 156
 					}
+	#message_url = 'https://rapidpro.io/api/v1/messages.json'
 	message_url = 'https://rapidpro.io/api/v1/messages.json'
 	token = getattr(settings,'token')
 	response = requests.post(message_url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data_to_send))
+	print(args['response'])'''
+	print("b1")
+	phone_number = "tel:"+args['phone']
+	sms_to_send = args['response']
+	data_to_send = {
+  					"urns": [phone_number],
+  					"text": sms_to_send,
+  					"relayer": 156
+					}
+	#message_url = 'https://rapidpro.io/api/v1/messages.json'
+	message_url = 'https://api.rapidpro.io/api/v1/broadcasts.json'
+	print("b2")
+	token = getattr(settings,'token','')
+	print("b3")
+	response = requests.post(message_url, headers={'Content-type': 'application/json', 'Authorization': 'Token %s' % token}, data = json.dumps(data_to_send))
+	print("b4")
 	print(args['response'])
+	print(response)
 
 def return_to_rapidPro(args):
 	pass
@@ -280,12 +298,14 @@ def receive_report(request):
 
 
 
-
+	print("a1")
 	#check if an incoming message has a valide prefixe
 	check_prefixe(incoming_data)
 	if not incoming_data['valide']:#If the prefix is not known, we inform the user and we stop to deal with this message
+		print("a2")
 		incoming_data['response']="Le mot qui commence votre message n est pas connu. Veuiller reenvoyer le message avec le premier mot valide."
 		send_sms_via_rapidpro(incoming_data)
+		print("a3")
 		resp = 0
 		return HttpResponse(resp)
 	print("333")	
