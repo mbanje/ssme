@@ -220,33 +220,40 @@ def erase(args):
 @csrf_exempt
 @json_view
 def receive_report(request):
-	'''This function will receive requests sent by RapidPro when a new sms repport is received by RapidPro'''
+	'''This function will receive requests sent by RapidPro when a new sms report is received by RapidPro.
+	This function send json data to RapidPro as a response.'''
+
+	#We will put all data sent by RapidPro in this variable
 	incoming_data = {}
+
+	#If the report is correct, incoming_data['valide'] will contain 'True'. If not, it will contains False
+	#Until we find out it is not correct, let's assume it's correct.
 	incoming_data['valide'] = True
+
 	incoming_data['response']="The default response..."
-	resp = 0
-	print("111")
+
+	#Two couples of variable/value are separated by &
+	#Let's put couples of variable/value in a list called 'list_of_data'
 	list_of_data = request.body.split("&")
+
+	#Let's put all the incoming data in the dictinary 'incoming_datas'
 	for i in list_of_data:
 		incoming_data[i.split("=")[0]] = i.split("=")[1]
-	print("222")
+		
 	
 
 
-
-
-
-
 	#IF the message contains only X, the phone user ask for stoping a flow
-	print("incoming_data['text'].upper() == 'X'")
-	print(incoming_data['text'].upper() == 'X')
 	if incoming_data['text'].upper() == 'X':
+		#Let's check if the phone number is registered in the system
 		the_phone_number_objects = PhoneNumber.objects.filter(phone_number = incoming_data['phone'])
 		if len(the_phone_number_objects) < 1:
 			incoming_data['valide'] = False
-			print("This phone number is not known.")
 			incoming_data['response'] = "Votre numero de telephone n est pas enregistre dans le systeme."
-			return
+			response = {'ok' : incoming_data['valide'], 'response' : incoming_data['response']}
+			print(response)
+			return response
+
 		the_phone_number_object = the_phone_number_objects[0]
 		the_person_reporting =  the_phone_number_object.person
 
@@ -255,7 +262,9 @@ def receive_report(request):
 			incoming_data['valide'] = False
 			print("This reporter is not known.")
 			incoming_data['response'] = "Vous n etes pas dans la liste des rapporteurs."
-			return
+			response = {'ok' : incoming_data['valide'], 'response' : incoming_data['response']}
+			print(response)
+			return response
 
 		the_reporter_object = the_reporter_object[0]
 
@@ -263,12 +272,11 @@ def receive_report(request):
 		if len(niveaux) > 0:
 			for n in niveaux:
 				n.delete()
-		incoming_data['valide'] = True
-		#send_sms_via_rapidpro(incoming_data)
+		incoming_data['valide'] = 'Exit'
 		incoming_data['response'] = "Vous avez ressie a annuler la session."
-		send_sms_via_rapidpro(incoming_data)
-		resp = 0
-		return HttpResponse(resp)
+		response = {'ok' : incoming_data['valide'], 'response' : incoming_data['response']}
+		print(response)
+		return response
 	#
 	
 
@@ -276,20 +284,15 @@ def receive_report(request):
 
 
 
-	print("a1")
+
 	#check if an incoming message has a valide prefixe
 	check_prefixe(incoming_data)
 	if not incoming_data['valide']:#If the prefix is not known, we inform the user and we stop to deal with this message
-		print("a2")
 		incoming_data['response']="Le mot qui commence votre message n est pas connu. Veuiller reenvoyer le message avec le premier mot valide."
-		send_sms_via_rapidpro(incoming_data)
-		print("a3")
-		resp = 0 
-		#return HttpResponse(resp)
+		
 		response = {'ok' : incoming_data['valide'], 'response' : incoming_data['response']}
 		print(response)
 		return response
-	print("333")	
 
 
 
@@ -298,10 +301,10 @@ def receive_report(request):
 	#Let check the level.
 	check_level(incoming_data)
 	if not incoming_data['valide']:
-		#print("incoming_data['response']====>")
-		#print(incoming_data['response'])
-		send_sms_via_rapidpro(incoming_data)
-		return HttpResponse(resp)
+		response = {'ok' : incoming_data['valide'], 'response' : incoming_data['response']}
+		print(response)
+		return response
+
 
 
 
@@ -312,21 +315,21 @@ def receive_report(request):
 		print(globals()[incoming_data['controler_name']])
 	except:
 		print("There is an exception due to the controler which doesn't exist...")
-		resp = 0
-		return HttpResponse(resp)
-	print("444")
+		incoming_data['valide'] = False
+		incoming_data['response'] = 'There is an exception due to the controler which does not exist'
+		response = {'ok' : incoming_data['valide'], 'response' : incoming_data['response']}
+		print(response)
+		return response
+
 	#Let's call the check_report() function of the object
 	related_checker.check_report(incoming_data)
 	if not incoming_data['valide']:
-		#print("incoming_data['response']====>")
-		#print(incoming_data['response'])
-		send_sms_via_rapidpro(incoming_data)
-		return HttpResponse(resp)
+		response = {'ok' : incoming_data['valide'], 'response' : incoming_data['response']}
+		print(response)
+		return response
 
 
 	incoming_data['response'] = "Votre message est bien recu. Merci."
-	#print("incoming_data['response']====>")
-	#print(incoming_data['response'])
-	send_sms_via_rapidpro(incoming_data)
-	print("FIN...")
-	return HttpResponse(resp)
+	response = {'ok' : incoming_data['valide'], 'response' : incoming_data['response']}
+	print(response)
+	return response
