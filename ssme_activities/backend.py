@@ -241,8 +241,8 @@ def receive_report(request):
 		incoming_data[i.split("=")[0]] = i.split("=")[1]
 		
 	
-	print("")
-	print("////AVANT if incoming_data['text'].upper() == 'X':////")
+	"==print(incoming_data['phone'])=="
+	print(incoming_data['phone'])
 	#IF the message contains only X, the phone user ask for stoping a flow
 	if incoming_data['text'].upper() == 'X':
 		print("////APRES if incoming_data['text'].upper() == 'X':////")
