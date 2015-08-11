@@ -218,6 +218,7 @@ def erase(args):
 	pass
 
 @csrf_exempt
+@json_view
 def receive_report(request):
 	'''This function will receive requests sent by RapidPro when a new sms repport is received by RapidPro'''
 	incoming_data = {}
@@ -283,8 +284,11 @@ def receive_report(request):
 		incoming_data['response']="Le mot qui commence votre message n est pas connu. Veuiller reenvoyer le message avec le premier mot valide."
 		send_sms_via_rapidpro(incoming_data)
 		print("a3")
-		resp = 0
-		return HttpResponse(resp)
+		resp = 0 
+		#return HttpResponse(resp)
+		response = {'ok' : incoming_data['valide'], 'response' : incoming_data['response']}
+		print(response)
+		return response
 	print("333")	
 
 
