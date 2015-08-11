@@ -241,13 +241,19 @@ def receive_report(request):
 		incoming_data[i.split("=")[0]] = i.split("=")[1]
 		
 	
-
-
+	print("")
+	print("////AVANT if incoming_data['text'].upper() == 'X':////")
 	#IF the message contains only X, the phone user ask for stoping a flow
 	if incoming_data['text'].upper() == 'X':
+		print("////APRES if incoming_data['text'].upper() == 'X':////")
+
+		print("...incoming_data['phone']...")
+		print(incoming_data['phone'])
 		#Let's check if the phone number is registered in the system
 		the_phone_number_objects = PhoneNumber.objects.filter(phone_number = incoming_data['phone'])
+		print(incoming_data['phone'])
 		if len(the_phone_number_objects) < 1:
+			print("Le numero de telephone en haut n a pas ete trouve.")
 			incoming_data['valide'] = False
 			incoming_data['response'] = "Votre numero de telephone n est pas enregistre dans le systeme."
 			response = {'ok' : incoming_data['valide'], 'response' : incoming_data['response']}
